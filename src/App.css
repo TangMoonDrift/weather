@@ -34,6 +34,7 @@
 }
 
 .chart {
+    padding-top: 20px;
     border-radius: 0 0 16px 16px;
     background-color: ghostwhite;
     box-shadow: ghostwhite 0 0 20px;

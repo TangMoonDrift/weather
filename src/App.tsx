@@ -9,7 +9,6 @@ import './App.css';
 type EChartsOption = Echarts.EChartsOption;
 
 function App() {
-  const [, forceUpdate] = useState(true);
   const container = useRef<HTMLDivElement>(null);
   const chart = useRef<Echarts.ECharts | null>(null);
   const [dates, SetDates] = useState<Array<string>>(['10.1', '10.2', '10.3', '10.4', '10.5', '10.6', '10.7']);
@@ -47,19 +46,19 @@ function App() {
     setCities(citiesList);
   }, []);
 
-  // useEffect(() => {
-  //   poll();
-  // }, [city]);
-  //
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     poll();
-  //   }, 1000 * 60 * 60);
-  //
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, []);
+  useEffect(() => {
+    poll();
+  }, [city]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      poll();
+    }, 1000 * 60 * 60);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (container.current) {
@@ -70,7 +69,7 @@ function App() {
             text: '一周天气',
             textStyle: {
               color: '#262626',
-              fontSize: 16,
+              fontSize: 20,
             },
           },
           tooltip: {
@@ -162,12 +161,12 @@ function App() {
   }
 
   function refresh() {
-    forceUpdate((prev) => !prev);
+    setCity((prevCity) => ({ ...prevCity }));
   }
 
   function poll() {
     fetchWeatherInfo(city.cityid).then((res) => {
-      const { data, city, cityid } = res;
+      const { data } = res;
       setWeatherInfo(data[0]);
       const h: number[] = [];
       const l: number[] = [];
@@ -182,10 +181,6 @@ function App() {
       setHighest(h);
       setLowest(l);
       SetDates(() => d);
-      setCity(() => ({
-        city,
-        cityid,
-      }));
     });
   }
 
